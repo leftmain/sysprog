@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ "x$1" = "x" ]; then
+	a=9
+else
+	a=$1
+fi
+i=1
+while [ $i -le $a ]; do
+	python3 checker.py -f test$i.txt
+	let i=i+1
+done
+
