@@ -1,3 +1,5 @@
 #!/bin/bash
-./a test1.txt test2.txt test3.txt test4.txt
+#./a test1.txt test2.txt test3.txt test4.txt
+./a test1.txt test2.txt test3.txt
+#./a test1.txt
 

@@ -2,28 +2,29 @@
 
 void read_arrays(int ** a, int * N, int argc, char ** argv) {
 	FILE * fp = 0;
-	int i = 0, x = 0, n = 0;
-	for (i = 0; i < argc - 1; i++) {
+	int i = 0, x = 0, n = 0, k = 0;
+	for (i = 0; i < argc - k - 1; i++) {
 		n = 0;
-		if (!(fp = fopen(argv[i + 1], "r"))) {
+		if (!(fp = fopen(argv[i + k + 1], "r"))) {
 			printf("cannot open %s\n", argv[i + 1]);
 			a[i] = 0;
+			i--; k++;
 			continue;
 		}
 		while (fscanf(fp, "%d", &x) == 1) n++;
 		if (!feof(fp)) {
-			printf("cannot read %s\n", argv[i + 1]);
+			printf("cannot read %s\n", argv[i + k + 1]);
 			a[i] = 0;
 			fclose(fp);
-			argc--; i--;
+			i--; k++;
 			continue;
 		}
 		rewind(fp);
-		a[i] = (int *)calloc((n + 1), sizeof(int));
+		a[i] = (int *)malloc((n + 1) * sizeof(int));
 		if (!a[i]) {
-			printf("memory error on %d array (file %s)\n", i, argv[i+1]);
+			printf("memory error on %d array (file %s)\n", i, argv[i+k+1]);
 			fclose(fp);
-			argc--; i--;
+			i--; k++;
 			continue;
 		}
 		*a[i] = n;
@@ -31,7 +32,7 @@ void read_arrays(int ** a, int * N, int argc, char ** argv) {
 			fscanf(fp, "%d ", a[i] + x);
 		fclose(fp);
 	}
-	*N = argc - 1;
+	*N = argc - k - 1;
 }
 
 void print_arrays(int ** a, int argc, char ** argv) {
@@ -48,6 +49,7 @@ void print_arrays(int ** a, int argc, char ** argv) {
 		fclose(fp);
 	}
 }
+
 
 void lin_sort(int * a, int n) {
 	int i = 1, j = 0, x = 0;

@@ -1,4 +1,4 @@
-F = -g
+F = -lrt
 all: a
 a: main.o arrays.o
 	gcc main.c arrays.o -o a

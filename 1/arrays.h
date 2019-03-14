@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 void read_arrays(int **, int *, int, char **);
 void print_arrays(int **, int, char **);
