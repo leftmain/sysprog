@@ -25,7 +25,7 @@ static int next_word(char * s) {
 			if (c == EOF) return -1;
 			return l;
 		}
-fprintf(stderr, "%c", c);
+//fprintf(stderr, "%c", c);
 		switch (c) {
 			case '#':
 				if (special) {
