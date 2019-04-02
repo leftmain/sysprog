@@ -21,15 +21,11 @@ static int next_word(char * s) {
 	if (end) return end = 0;
 	while (l < BUF_LEN - 1) {
 		if ((c = getchar()) <= 0) {
-			if (c == 0) {
-				s[l] = 0;
-				return l;
-			}
 			s[l] = 0;
 			if (c == EOF) return -1;
 			return l;
 		}
-//fprintf(fp, "%c", c);
+fprintf(stderr, "%c", c);
 		switch (c) {
 			case '#':
 				if (special) {
@@ -43,7 +39,7 @@ static int next_word(char * s) {
 					l++;
 					continue;
 				}
-				while (c !='\n' && (c = getchar()) > 0) {
+				while (c != '\n' && (c = getchar()) > 0) {
 					if (c == EOF) return -1;
 				}
 				if (c == EOF) return -1;
