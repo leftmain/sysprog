@@ -109,9 +109,9 @@ int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
 	int status = 0;
 	close(fd1[READ_END]);
 	close(fd1[WRITE_END]);
-fprintf(stderr, "c: %d\n", child);
+//fprintf(stderr, "c: %d\n", child);
 	waitpid(child, &status, 0);
-fprintf(stderr, "p: %d\n", getpid());
+//fprintf(stderr, "p: %d\n", getpid());
 	switch (curr->op) {
 		case AND:
 			if (status == 0) return exe_cmd(curr->next, fd2, fd1, AND);
