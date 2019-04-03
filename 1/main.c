@@ -41,8 +41,8 @@ void heap_sort(int *a, int n, int I) {
         }
         a[j] = x;
     }
-	change_context();
     
+change_context();
     for (i = n - 1; i > 0; i--) {
         x = a[i];
 		
@@ -150,7 +150,8 @@ int main(int argc, char ** argv) {
 	if (swapcontext(&uctx_main, uctx_func) == -1)
 		handle_error("swapcontext");
 	clock_gettime(TIME, &t2);
-	printf("time: %ld\n", 1000000*(t2.tv_sec-t1.tv_sec)+(t2.tv_nsec-t1.tv_nsec)/1000);
+	printf("time: %ld\n", 1000000*(t2.tv_sec-t1.tv_sec)+ \
+			(t2.tv_nsec-t1.tv_nsec)/1000);
 
 	merge(a, N, res_file);
 
