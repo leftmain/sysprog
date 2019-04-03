@@ -18,6 +18,30 @@ static int next_word(char * s) {
 			return l;
 		}
 		switch (c) {
+			case '|':
+				if (special) {
+					s[l] = c;
+					l++;
+					special = 0;
+					continue;
+				}
+				if (l > 0) {
+					ungetc(c, stdin);
+				} else {
+					s[l] = c;
+					l++;
+					if ((c = getchar()) <= 0) {
+						s[l] = 0;
+						if (c == EOF) return -1;
+						return l;
+					}
+					if (c == '|') {
+						s[l] = c;
+						l++;
+					} else ungetc(c, stdin);
+				}
+				s[l] = 0;
+				return l;
 			case '#':
 				if (special) {
 					s[l] = c;
@@ -42,9 +66,12 @@ static int next_word(char * s) {
 					special = 0;
 					continue;
 				}
+				if (quotes_1 || quotes_2) {
+					s[l] = c;
+					l++;
+					continue;
+				}
 				end = 1;
-				quotes_1 = 0;
-				quotes_2 = 0;
 				s[l] = 0;
 				return l;
 			case '\"':
