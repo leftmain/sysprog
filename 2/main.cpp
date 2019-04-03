@@ -5,7 +5,6 @@
 #define LEN 1024
 #define READ_END 0
 #define WRITE_END 1
-#define DEBUG 1
 
 int exe_cmd(struct cmd *, int[2], int[2], int = 0);
 
