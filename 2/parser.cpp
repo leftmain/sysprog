@@ -1,6 +1,6 @@
 #include "parser.h"
 
-//FILE * fp;
+FILE * fp;
 static int next_word(char *);
 static void push_word_back(char *, int);
 
@@ -25,7 +25,7 @@ static int next_word(char * s) {
 			if (c == EOF) return -1;
 			return l;
 		}
-//fprintf(stderr, "%c", c);
+fprintf(fp, "%c", c);
 		switch (c) {
 			case '#':
 				if (special) {
@@ -49,10 +49,6 @@ static int next_word(char * s) {
 			case '\n':
 				if (special) {
 					special = 0;
-					if (l != 0 && !quotes_1 && !quotes_2) {
-						s[l] = 0;
-						return l;
-					}
 					continue;
 				}
 				end = 1;
@@ -139,7 +135,7 @@ struct cmd * parse(FILE * fp) {
 	struct cmd * prev = 0;
 	int i = 0;
 	int l = 0;
-//::fp = fp;
+::fp = fp;
 	head = new struct cmd;
 	if (!head) return head;
 	curr = prev = head;

@@ -5,6 +5,7 @@
 #define LEN 1024
 #define READ_END 0
 #define WRITE_END 1
+#define DEBUG 1
 
 int exe_cmd(struct cmd *, int[2], int[2], int = 0);
 int exe_cd(char **);
@@ -25,17 +26,16 @@ int EXIT = 0;
 int main(int argc, char ** argv) {
 	struct cmd * head = 0;
 	int res = 0;
+	FILE * fp = 0;
 
-/*
-	FILE * fp = fopen("b.txt", "w");
+	fp = fopen("b.txt", "w");
 	if (!fp) {
 		fprintf(stderr, "open error\n");
 		return 0;
 	}
-*/
 	
 	while (res >= 0) {
-		head = parse();
+		head = parse(fp);
 		if (!head) break;
 /**
 		if (!head) {
@@ -64,7 +64,7 @@ int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
 
 	if (child < 0) {
 //		fprintf(stderr, "fork error for %s cmd\n", curr->argv[0]);
-		return 1;
+		return -1;
 	} else if (child == 0) {
 		close(fd1[WRITE_END]);
 		close(fd2[READ_END]);
@@ -92,7 +92,7 @@ int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
 			fd2[WRITE_END] = open(curr->next->argv[0], flags, 0777);
 			if (fd2[WRITE_END] < 0) {
 //				fprintf(stderr, "%s cmd error\n", curr->argv[0]);
-				return 1;
+				return -1;
 			}
 			dup2(fd2[WRITE_END], WRITE_END);
 		default: close(fd2[WRITE_END]);
@@ -103,7 +103,7 @@ int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
 				return (*exe_other_cmd[i])(curr->argv);
 		execvp(curr->argv[0], curr->argv);
 //		fprintf(stderr, "%s cmd error\n", curr->argv[0]);
-		return 1;
+		return -1;
 	}
 
 	int status = 0;

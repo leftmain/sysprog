@@ -7,8 +7,7 @@
 #include <unistd.h>
 #include <vector>
 
-#define SPACES	" \n"
-#define SPACESQ	"\"\n"
+#define DEBUG 1
 #define BUF_LEN 100
 #define AND		1
 #define OR		2
