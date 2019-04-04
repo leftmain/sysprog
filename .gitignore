@@ -5,4 +5,5 @@
 leak.out
 a
 !result*.txt
+!task.txt
 

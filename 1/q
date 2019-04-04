@@ -1,8 +1,0 @@
-#!/bin/bash
-./g
-cat test1.txt
-echo ""
-./r
-cat result.txt
-echo ""
-
