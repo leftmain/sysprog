@@ -20,7 +20,7 @@ enum operator_ {
 
 struct cmd {
 	struct cmd * next = nullptr;
-	char ** argv = 0;
+	char ** argv = nullptr;
 	int argc = 0;
 	operator_ op = NONE;
 };
