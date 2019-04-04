@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <vector>
 
-#define DEBUG 1
 #define BUF_LEN 100
 #define AND		1
 #define OR		2
@@ -24,7 +23,7 @@ struct cmd {
 
 void delete_cmd(struct cmd *);
 
-struct cmd * parse(FILE * = stdin);
+struct cmd * parse();
 void print_cmd(struct cmd *, FILE * = stderr);
 
 #endif

@@ -1,14 +1,6 @@
 #include "parser.h"
 
-FILE * fp;
 static int next_word(char *);
-static void push_word_back(char *, int);
-
-static void push_word_back(char * s, int l) {
-	int i = l - 1;
-	ungetc(' ', stdin);
-	for (; i >= 0; i--) ungetc(s[i], stdin);
-}
 
 static int next_word(char * s) {
 	static int quotes_1 = 0;
@@ -25,7 +17,6 @@ static int next_word(char * s) {
 			if (c == EOF) return -1;
 			return l;
 		}
-fprintf(fp, "%c", c);
 		switch (c) {
 			case '#':
 				if (special) {
@@ -43,7 +34,7 @@ fprintf(fp, "%c", c);
 					if (c == EOF) return -1;
 				}
 				if (c == EOF) return -1;
-				push_word_back(&c, 1);
+				ungetc(c, stdin);
 				s[l] = 0;
 				return l;
 			case '\n':
@@ -127,7 +118,7 @@ fprintf(fp, "%c", c);
 	return l;
 }
 
-struct cmd * parse(FILE * fp) {
+struct cmd * parse() {
 	char buf[BUF_LEN + 1];
 	std::vector<char *> argv;
 	struct cmd * head = 0;
@@ -135,7 +126,6 @@ struct cmd * parse(FILE * fp) {
 	struct cmd * prev = 0;
 	int i = 0;
 	int l = 0;
-::fp = fp;
 	head = new struct cmd;
 	if (!head) return head;
 	curr = prev = head;
@@ -194,7 +184,6 @@ struct cmd * parse(FILE * fp) {
 		}
 	}
 	if (l < 0) return 0;
-//fprintf(fp, "@:%d\n", l);
 	if (!argv.empty()) {
 		argv.push_back(0);
 		curr->argc = argv.size();
