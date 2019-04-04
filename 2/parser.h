@@ -8,17 +8,21 @@
 #include <vector>
 
 #define BUF_LEN 100
-#define AND		1
-#define OR		2
-#define PIPE	3
-#define REDIR1	4
-#define REDIR2	5
+
+enum operator_ {
+	NONE,
+	AND,
+	OR,
+	PIPE,
+	REDIR1,
+	REDIR2
+};
 
 struct cmd {
-	struct cmd * next = 0;
+	struct cmd * next = nullptr;
 	char ** argv = 0;
 	int argc = 0;
-	int op = 0;
+	operator_ op = NONE;
 };
 
 void delete_cmd(struct cmd *);

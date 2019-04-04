@@ -1,40 +1,31 @@
 #include "parser.h"
 
-static int next_word(char *);
-
 static int next_word(char * s) {
 	static int quotes_1 = 0;
 	static int quotes_2 = 0;
 	static int end = 0;
 	int special = 0;
-	int command = 0;
 	int l = 0;
 	char c = 0;
 	if (end) return end = 0;
 	while (l < BUF_LEN - 1) {
-		if ((c = getchar()) <= 0) {
-			s[l] = 0;
-			if (c == EOF) return -1;
-			return l;
+		if ((c = getchar()) <= 0) return -1;
+		if (special) {
+			if (c != '\n') {
+				s[l] = c;
+				l++;
+			}
+			special = 0;
+			continue;
 		}
 		switch (c) {
 			case '|':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				if (l > 0) {
 					ungetc(c, stdin);
 				} else {
 					s[l] = c;
 					l++;
-					if ((c = getchar()) <= 0) {
-						s[l] = 0;
-						if (c == EOF) return -1;
-						return l;
-					}
+					if ((c = getchar()) <= 0) return -1;
 					if (c == '|') {
 						s[l] = c;
 						l++;
@@ -43,29 +34,17 @@ static int next_word(char * s) {
 				s[l] = 0;
 				return l;
 			case '#':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				if (l > 0) {
 					s[l] = c;
 					l++;
 					continue;
 				}
-				while (c != '\n' && (c = getchar()) > 0) {
-					if (c == EOF) return -1;
-				}
+				while (c != '\n' && (c = getchar()) >= 0);
 				if (c == EOF) return -1;
 				ungetc(c, stdin);
 				s[l] = 0;
 				return l;
 			case '\n':
-				if (special) {
-					special = 0;
-					continue;
-				}
 				if (quotes_1 || quotes_2) {
 					s[l] = c;
 					l++;
@@ -75,12 +54,6 @@ static int next_word(char * s) {
 				s[l] = 0;
 				return l;
 			case '\"':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				if (quotes_1) {
 					s[l] = c;
 					l++;
@@ -93,12 +66,6 @@ static int next_word(char * s) {
 				}
 				break;
 			case '\'':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				if (quotes_2) {
 					s[l] = c;
 					l++;
@@ -111,21 +78,9 @@ static int next_word(char * s) {
 				}
 				break;
 			case '\\':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				special = 1;
 				break;
 			case ' ':
-				if (special) {
-					s[l] = c;
-					l++;
-					special = 0;
-					continue;
-				}
 				if (quotes_1 || quotes_2) {
 					s[l] = c;
 					l++;
@@ -191,7 +146,7 @@ struct cmd * parse() {
 		else if (!strcmp(buf, "|")) curr->op = PIPE;
 		else if (!strcmp(buf, ">")) curr->op = REDIR1;
 		else if (!strcmp(buf, ">>")) curr->op = REDIR2;
-		if (curr->op) {
+		if (curr->op != NONE) {
 			argv.pop_back();
 			argv.push_back(0);
 			curr->argc = argv.size();

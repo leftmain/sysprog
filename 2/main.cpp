@@ -6,7 +6,7 @@
 #define READ_END 0
 #define WRITE_END 1
 
-int exe_cmd(struct cmd *, int[2], int[2], int = 0);
+int exe_cmd(struct cmd *, int[2], int[2], operator_ = NONE);
 
 int main(int argc, char ** argv) {
 	struct cmd * head = 0;
@@ -30,7 +30,7 @@ int main(int argc, char ** argv) {
 	return 0;
 }
 
-int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
+int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], operator_ op) {
 	if (curr->argc == 0) return 0;
 	int status = 0;
 	if (curr->argv[0] && !strcmp(curr->argv[0], "cd")) {
@@ -46,32 +46,32 @@ int exe_cmd(struct cmd * curr, int fd1[2], int fd2[2], int op) {
 			close(fd2[READ_END]);
 
 			switch (op) {
-			case PIPE: dup2(fd1[READ_END], READ_END);
-				break;
-			case REDIR1:
-			case REDIR2:
-				close(fd1[READ_END]);
-				close(fd2[WRITE_END]);
-				return -1;
-			default: close(fd1[READ_END]);
+				case PIPE: dup2(fd1[READ_END], READ_END);
+					break;
+				case REDIR1:
+				case REDIR2:
+					close(fd1[READ_END]);
+					close(fd2[WRITE_END]);
+					return -1;
+				default: close(fd1[READ_END]);
 			}
 
 			int flags = O_RDWR | O_CREAT | O_TRUNC;
 			switch (curr->op) {
-			case PIPE:
-				dup2(fd2[WRITE_END], WRITE_END);
-				break;
-			case REDIR2:
-				flags |= O_APPEND;
-				flags &= (~O_TRUNC);
-			case REDIR1:
-				close(fd2[WRITE_END]);
-				fd2[WRITE_END] = open(curr->next->argv[0], flags, 0777);
-				if (fd2[WRITE_END] < 0) {
-					return -1;
-				}
-				dup2(fd2[WRITE_END], WRITE_END);
-			default: close(fd2[WRITE_END]);
+				case PIPE:
+					dup2(fd2[WRITE_END], WRITE_END);
+					break;
+				case REDIR2:
+					flags |= O_APPEND;
+					flags &= (~O_TRUNC);
+				case REDIR1:
+					close(fd2[WRITE_END]);
+					fd2[WRITE_END] = open(curr->next->argv[0], flags, 0777);
+					if (fd2[WRITE_END] < 0) {
+						return -1;
+					}
+					dup2(fd2[WRITE_END], WRITE_END);
+				default: close(fd2[WRITE_END]);
 			}
 
 			execvp(curr->argv[0], curr->argv);
