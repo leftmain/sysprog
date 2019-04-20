@@ -34,6 +34,7 @@ enum ufs_error_code {
 	UFS_ERR_NO_MEM,
 	UFS_ERR_NO_FILE,
 	UFS_ERR_NO_PERMISSION,
+	UFS_ERR_NO_DESC,
 };
 
 /** Get code of the last error. */
