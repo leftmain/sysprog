@@ -1,4 +1,4 @@
-F = -c -g
+F = -c -Wreturn-type
 
 all: test.o userfs.o
 	gcc test.o userfs.o

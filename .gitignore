@@ -4,6 +4,7 @@
 *.txt
 leak.out
 a
+a.out
 !result*.txt
 !task.txt
 
